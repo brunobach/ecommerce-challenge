@@ -9,21 +9,25 @@ import { UserService } from './user.service';
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => [User])
   public async getUsers(): Promise<User[]> {
     return this.userService.getUsers();
   }
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => User, { nullable: true })
   public async getUser(@Args('id') id: string): Promise<User> {
     return this.userService.getUser(id);
   }
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => User, { nullable: true })
   public async userByEmail(@Args('email') email: string): Promise<User> {
     return this.userService.findEmail(email);
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => User)
   public async updateUser(
     @Args('data') input: UserUpdateInputType,

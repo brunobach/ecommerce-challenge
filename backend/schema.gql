@@ -9,6 +9,7 @@ type User {
   profile_url: String
   is_active: Boolean!
   confirmation_email: Boolean!
+  password: String!
   createdAt: DateTime!
   updatedAt: DateTime!
   productConnection: [Product!]!
@@ -87,7 +88,7 @@ input UserUpdateInputType {
   id: String!
   name: String
   email: String
-  password: String
+  password: String!
   profile_url: String
 }
 

@@ -6,11 +6,12 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 import Product from '../../product/entities/product.entity';
 
-import { hashPasswordTransform } from 'src/common/transformers/crypto-transform';
-
+import { hashSync } from 'bcrypt';
 @ObjectType()
 @Entity({ name: 'users' })
 export class User {
@@ -26,11 +27,14 @@ export class User {
   @Column()
   email: string;
 
-  @Column({
-    transformer: hashPasswordTransform,
-  })
-  @HideField()
+  @Column()
   password: string;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  hashPassword() {
+    this.password = hashSync(this.password, 8);
+  }
 
   @Field(() => String, { nullable: true })
   @Column({ nullable: true })

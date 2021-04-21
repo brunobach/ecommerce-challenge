@@ -9,7 +9,7 @@ export class UserController {
   @Get('confirmation_email')
   async setConfirmEmail(
     @Query() query: QueryUserConfirmationType,
-  ): Promise<string> {
+  ): Promise<{ confirmation: boolean }> {
     return await this.userService.confirmationEmail(query.id);
   }
 }

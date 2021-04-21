@@ -2,16 +2,20 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import Product from './entities/product.entity';
 import { ProductInputType } from './dto/create-product.input';
 import { ProductService } from './product.service';
+import { UseGuards } from '@nestjs/common';
+import { GqlAuthGuard } from 'src/authentication/jwt/jwt-auth.guard';
 
 @Resolver(() => Product)
 export class ProductResolver {
   constructor(private readonly _product: ProductService) {}
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => [Product])
   public async Products(): Promise<Product[]> {
     return this._product.productRepo.find();
   }
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => [Product])
   public async getProductsFromUser(
     @Args('userId') userId: string,
@@ -21,11 +25,13 @@ export class ProductResolver {
     });
   }
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => Product, { nullable: true })
   public async Product(@Args('id') id: string): Promise<Product> {
     return this._product.productRepo.findOne({ where: { id } });
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => Product)
   async createProduct(
     @Args('name') name: string,
@@ -47,6 +53,7 @@ export class ProductResolver {
     return await this._product.createProduct(product);
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => Product)
   async updateProduct(
     @Args('id') id: string,
@@ -70,6 +77,7 @@ export class ProductResolver {
     return await this._product.updateProduct(product);
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => Product)
   public async deleteProduct(@Args('id') id: string): Promise<Product> {
     return await this._product.deleteProduct(id);

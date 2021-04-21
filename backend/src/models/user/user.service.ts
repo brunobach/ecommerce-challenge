@@ -50,6 +50,13 @@ export class UserService {
   }
 
   async createUser(input: UserInputType): Promise<User> {
+    const { email } = input;
+    const checkeUser = await this.userRepository.findOne({ where: { email } });
+
+    if (checkeUser) {
+      throw new Error('User already exists');
+    }
+
     const user = this.userRepository.create({
       name: input.name,
       email: input.email,
@@ -65,9 +72,15 @@ export class UserService {
     return userSaved;
   }
 
-  async confirmationEmail(id: string): Promise<string> {
+  async confirmationEmail(id: string): Promise<{ confirmation: boolean }> {
+    const user = await this.userRepository.findOne(id);
+
+    if (!user) {
+      throw new NotFoundException('User Id not found!');
+    }
+
     await this.updateUser({ id, confirmation_email: true });
 
-    return `{ confirmation: true }`;
+    return { confirmation: true };
   }
 }

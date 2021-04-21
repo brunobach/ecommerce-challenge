@@ -18,7 +18,7 @@ class UserUpdateInputType {
   readonly name: string;
   @Field({ nullable: true })
   readonly email: string;
-  @Field({ nullable: true })
+  @Field()
   readonly password: string;
   @Field({ nullable: true })
   readonly profile_url: string;
